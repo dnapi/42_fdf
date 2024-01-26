@@ -100,11 +100,29 @@ void bresenham(int x0, int y0, int x1, int y1, t_fdf *fdf)
 	mlx_put_pixel(fdf->image, x0, y0, color);
 }
 
+void fill_image(t_fdf *fdf) 
+{
+	int	i;
+	int	j;
+	
+	i = -1;
+    while (++i < fdf->image->width)
+	{
+		j = -1;
+		while (++j < fdf->image->height) 
+		{
+			mlx_put_pixel(fdf->image, i, j, IMAGEBACKGROUND);
+    	}
+	}
+}
+
 void ft_line(void *data)
 {
 	t_fdf	*fdf;
 
 	fdf = data;
+
+	fill_image(data); 
 	bresenham(0, 0,  100, fdf->temp, fdf);
 }
 
@@ -129,7 +147,10 @@ void ft_hook(void *data)
 	if (mlx_is_key_down(mlx, MLX_KEY_T))
 		fdf->temp += 10;
 	if (mlx_is_key_down(mlx, MLX_KEY_Y) && fdf->temp > 10)
+	{
 		fdf->temp -= 10;
+//		fill_image(data); 
+	}
 }
 
 // Print the window width and height.

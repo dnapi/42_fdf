@@ -6,7 +6,7 @@
 /*   By: apimikov <apimikov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 07:20:43 by apimikov          #+#    #+#             */
-/*   Updated: 2024/01/25 17:49:40 by apimikov         ###   ########.fr       */
+/*   Updated: 2024/01/26 17:59:30 by apimikov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #define IMAGEHEIGHT 100
 #define MLXWIDTH 500
 #define MLXHEIGHT 500
+#define IMAGEBACKGROUND 0x0
 
 #include <stdio.h>
 #include <fcntl.h>
