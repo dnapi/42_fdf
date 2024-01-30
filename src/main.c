@@ -1,236 +1,256 @@
-#include "fdf.h"
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <unistd.h>
+#include "../include/MLX42.h"
+#include "../include/fdf.h"
 
-void	ft_free_char2d(char **split);
-
-
-// error msgs
-void	*null_err(char *msg)
+int32_t	ft_pixel(int32_t r, int32_t g, int32_t b, int32_t a)
 {
-	ft_putstr_fd(msg, 2);
-	return (NULL);
+	return (r << 24 | g << 16 | b << 8 | a);
 }
 
-int	value_err(char *msg, int err)
+int	ft_abs(int i)
 {
-	ft_putstr_fd(msg, 2);
-	return (err);
+	return (i * (i >= 0) - i * (i < 0));
 }
 
-int	value_err_free(char *msg, int err, t_fdf *fdf)
+int	ft_sign(int i)
 {
-	free(fdf);
-	ft_putstr_fd(msg, 2);
-	return (err);
+	return ((i >= 0) - (i < 0));
 }
 
-//  first reading file -> setting size of map
-size_t	sizeof_arr(char **str)
+int	ft_max(int a, int b)
 {
-	size_t	i;
+	return (a * (a >= b) + b * (a < b));
+}
 
-	if (!str)
-		return (-1);
-	i = 0;
-	while (str[i])
+int	ft_min(int a, int b)
+{
+	return (a * (a <= b) + b * (a > b));
+}
+
+void	move_vec(int k, t_fdf *fdf, int j, int i)
+{
+	float	n;
+	float	r[3];
+	float	size;
+
+	n = fdf->size_x;
+	size = (float)(fdf->image->width);
+	r[2] = (fdf->z[j][i] - fdf->min_z) * size / ft_max(fdf->max_z - fdf->min_z, 1) / 10;
+	r[1] = (j - (n - 1) / 2) * size / (n + 1) / 2;
+	r[0] = (i - (n - 1) / 2) * size / (n + 1) / 2;
+	fdf->vec[k].x = cosf(fdf->cam.angz) * r[0] - sinf(fdf->cam.angz) * r[1];
+	fdf->vec[k].y = cosf(fdf->cam.angx) * (cosf(fdf->cam.angz) * r[1] \
+					+ sinf(fdf->cam.angz) * r[0]) - sinf(fdf->cam.angx) * r[2];
+	fdf->vec[k].x = fdf->cam.zoom * (fdf->vec[k].x + fdf->cam.shiftx) + size / 2;
+	fdf->vec[k].y = fdf->cam.zoom * (fdf->vec[k].y + fdf->cam.shifty) + size / 2;
+	fdf->vec[k].z = fdf->z[j][i];
+	fdf->vec[k].c = 0xFFFFFFFF;
+}
+
+int	is_pixel(t_vec r0, t_fdf *fdf)
+{
+	if (r0.x >= 0 && r0.y >= 0 && \
+			r0.x < fdf->image->width - 1 && r0.y < fdf->image->height - 1)
 	{
-		if (*str[i] == '\n')
-			break ;
-		i++;
+		return (1);
 	}
-	return (i);
-}
-
-size_t	sizeof_line(char *str)
-{
-	char	**row;
-	size_t	size;
-
-	if (!str)
-		return (-1);
-	row = ft_split(str, ' ');
-	if (!row)
-		exit(value_err_free("Error: malloc ft_split\n", 1, NULL));
-	size = sizeof_arr(row);
-	ft_free_char2d(row);
-	return (size);
-}
-
-int	set_size_xy(t_fdf *fdf)
-{
-	char	*str;
-
-	fdf->fd = open(fdf->argv[1], O_RDONLY);
-	if (fdf->fd == -1)
-		exit (value_err_free("Error: can't open file\n", 1, fdf));
-	str = get_next_line(fdf->fd);
-	if (!str)
-		exit(value_err_free("Error: Empty file\n", 1, fdf));
-	fdf->size_x = sizeof_line(str);
-	free(str);
-	fdf->size_y = 1;
-	while (str)
-	{
-		str = get_next_line(fdf->fd);
-		if (!str)
-			break ;
-		if (fdf->size_x != sizeof_line(str))
-			exit(value_err_free("Error: wrong format of the file\n", 1, fdf));
-		free(str);
-		fdf->size_y++;
-	}
-	if (close(fdf->fd) == -1)
-		exit(value_err_free("Error: close file error\n", 1, fdf));
 	return (0);
 }
 
-// init z matrix
-int	**alloc_2d_int(size_t size_x, size_t size_y)
+void	set_bresenham(t_vec r0, t_vec r1, t_brsnhm *brs)
 {
-	int	**z;
-	int	i;
-	int	x;
+	brs->d[0] = ft_abs(r1.x - r0.x);
+	brs->d[1] = ft_abs(r1.y - r0.y);
+	brs->s[0] = ft_sign(r1.x - r0.x);
+	brs->s[1] = ft_sign(r1.y - r0.y);
+	brs->e[0] = brs->d[0] - brs->d[1];
+}
 
-	z = (int **)malloc(sizeof(int *) * size_y);
-	if (!z)
-		return (null_err("Error: memory problem \n"));
-	i = -1;
-	while (++i < size_y)
+void	bresenham_mod(t_vec r0, t_vec r1, t_fdf *fdf)
+{
+	t_brsnhm	brs;
+	uint32_t	color;
+
+	set_bresenham(r0, r1, &brs);
+	color = 0xFFFFFFFF;
+	while (r0.x != r1.x || r0.y != r1.y)
 	{
-		z[i] = (int *)malloc(sizeof(int) * size_x);
-		if (!z[i])
+		if (is_pixel(r0, fdf))
+			mlx_put_pixel(fdf->image, r0.x, r0.y, color);
+		brs.e[1] = 2 * brs.e[0];
+		if (brs.e[1] > -brs.d[1])
 		{
-			while (--i >= 0)
-				free(z[i]);
-			free(z);
-			return (null_err("Error: memory problem \n"));
+			brs.e[0] -= brs.d[1];
+			r0.x += brs.s[0];
 		}
-		x = -1;
-		while (++x < size_x)
-			z[i][x] = 0;
+		if (brs.e[1] < brs.d[0])
+		{
+			brs.e[0] += brs.d[0];
+			r0.y += brs.s[1];
+		}
 	}
-	return (z);
+	if (is_pixel(r0, fdf))
+		mlx_put_pixel(fdf->image, r0.x, r0.y, color);
 }
 
-void	str_to_int(char **str, int *row, size_t size)
+/*
+void bresenham_mod(t_vec r0, t_vec r1, t_fdf *fdf) 
 {
-	size_t	i;
 
-	i = -1;
-	while (++i < size)
-		row[i] = ft_atoi(str[i]);
-}
-void	print_array_1d(int *row, size_t size)
-{
-	size_t	i;
+	int	d[2];
+	int	s[2];
+  int err[2];
+	uint32_t color;
 
-	i = -1;
-	while (++i < size)
+	d[0] = ft_abs(r1.x - r0.x);
+	d[1] = ft_abs(r1.y - r0.y);
+	s[0] = ft_sign(r1.x - r0.x);
+	s[1] = ft_sign(r1.y - r0.y);
+	err[0] = d[0] - d[1];
+	color = 0xFFFFFFFF;	
+	while (r0.x != r1.x || r0.y != r1.y)
 	{
-		ft_putnbr_fd(row[i], 1);
-		ft_putstr_fd(" ", 1);
+		if (is_pixel(r0, fdf))
+			mlx_put_pixel(fdf->image, r0.x, r0.y, color);
+		err[1] = 2 * err[0];
+		if (err[1] > -d[1]) 
+		{
+			err[0] -= d[1];
+			r0.x += s[0];
+		}
+		if (err[1] < d[0]) 
+		{
+			err[0] += d[0];
+			r0.y += s[1];
+    }
 	}
-	ft_putstr_fd("\n", 1);
-
+	if (is_pixel(r0, fdf))
+		mlx_put_pixel(fdf->image, r0.x, r0.y, color);
 }
-
-void	set_z_matrix(t_fdf *fdf)
+*/
+/*
+void	fill_image(t_fdf *fdf) 
 {
-	char	*str;
-	char	**row;
-	size_t	y;
-
-	fdf->z = alloc_2d_int(fdf->size_x, fdf->size_y);
-	if (!fdf->z)
-		exit(value_err_free("Error: malloc alloc_2d_int\n", 1, fdf));
-	if (!fdf->z)
-		exit(value_err_free("Error: memory problem\n", 1, fdf));
-	y = -1;
-	while (++y < fdf->size_y)
+	int	i;
+	int	j;
+	
+	i = -1;
+	while (++i < fdf->image->width)
 	{
-		str = get_next_line(fdf->fd);
-		if (!str)
-			break ;
-		row = ft_split(str, ' ');
-		free(str);
-		str_to_int(row, fdf->z[y], fdf->size_x);
-//		print_array_1d(fdf->z[y], fdf->size_x);
-		ft_free_char2d(row);
+		j = -1;
+		while (++j < fdf->image->height) 
+			mlx_put_pixel(fdf->image, i, j, IMAGEBACKGROUND);
 	}
-	if (close(fdf->fd) == -1)
-		exit(value_err_free("Error: close file error\n", 1, fdf));
-	return ;
 }
+*/
 
-
-
-//  init_fdf 
-
-t_fdf	*init_fdf(int argc, char *argv[])
+void	ft_line(void *data)
 {
 	t_fdf	*fdf;
-	char	*pnt;
-	int		dim_y;
-	int		dim_x;
+	int		i;
+	int		j;
 
-	if (argc != 2)
-		return (null_err("Error: wrong number of arguments.\n"));
-	fdf = (t_fdf *)malloc(sizeof(t_fdf) * 1);
-	if (!fdf)
-		return (null_err("Error: fdf malloc problem\n"));
-	fdf->argv = argv;
-	set_size_xy(fdf);
-	fdf->fd = open(argv[1], O_RDONLY);
-	if (fdf->fd == -1)
-		return (null_err("Error: can't open file\n"));
-	printf("map size = (%zu,%zu)\n", fdf->size_x, fdf->size_y);
-	set_z_matrix(fdf);
-	return (fdf);
-}
-
-
-void	ft_free_char2d(char **split)
-{
-	size_t	i;
-
-	if (!split)
-		return ;
-	i = 0;
-	while (split[i])
+	fdf = data;
+	ft_memset(fdf->image->pixels, CHANNELBACK,
+		fdf->image->width * fdf->image->height * sizeof(int32_t));
+	i = -1;
+	j = -1;
+	while (++j < fdf->size_y - 1)
 	{
-		free(split[i]);
-		i++;
+		i = -1;
+		while (++i < fdf->size_x - 1)
+		{
+			move_vec(0, fdf, j, i);
+			move_vec(1, fdf, j + 1, i);
+			bresenham_mod(fdf->vec[0], fdf->vec[1], fdf);
+			move_vec(1, fdf, j, i + 1);
+			bresenham_mod(fdf->vec[0], fdf->vec[1], fdf);
+		}
+		move_vec(0, fdf, j, i);
+		move_vec(1, fdf, j + 1, i);
+		bresenham_mod(fdf->vec[0], fdf->vec[1], fdf);
 	}
-	free(split);
+	i = -1;
+	while (++i < fdf->size_x - 1)
+	{
+		move_vec(0, fdf, j, i);
+		move_vec(1, fdf, j, i + 1);
+		bresenham_mod(fdf->vec[0], fdf->vec[1], fdf);
+	}
 }
 
-void    free_int_2d(int **m)
+void	ft_hook(void *data)
 {
-    size_t  i;
+	t_fdf	*fdf;
 
-    i = 0;
-    while (m[i])
-    {
-        free(m[i]);
-        i++;
-    }
-    free(m);
+	fdf = data;
+	if (mlx_is_key_down(fdf->mlx, MLX_KEY_ESCAPE))
+		mlx_close_window(fdf->mlx);
+	if (mlx_is_key_down(fdf->mlx, MLX_KEY_UP))
+		fdf->cam.shifty -= 5;
+	if (mlx_is_key_down(fdf->mlx, MLX_KEY_DOWN))
+		fdf->cam.shifty += 5;
+	if (mlx_is_key_down(fdf->mlx, MLX_KEY_LEFT))
+		fdf->cam.shiftx -= 5;
+	if (mlx_is_key_down(fdf->mlx, MLX_KEY_RIGHT))
+		fdf->cam.shiftx += 5;
+	if (mlx_is_key_down(fdf->mlx, MLX_KEY_Z))
+		fdf->cam.zoom *= 1.1;
+	if (mlx_is_key_down(fdf->mlx, MLX_KEY_X) && fdf->cam.zoom > 0.01)
+		fdf->cam.zoom /= 1.1;
+	if (mlx_is_key_down(fdf->mlx, MLX_KEY_R))
+		fdf->cam.angx += 0.05;
+	if (mlx_is_key_down(fdf->mlx, MLX_KEY_F))
+		fdf->cam.angz += 0.05;
 }
 
-void	free_fdf(t_fdf *fdf)
+// Print the window width and height.
+static void	ft_hook_print(void *data)
 {
-	if (!fdf)
-		return ;
-	if (!fdf->z)
-		free_int_2d(fdf->z);
+	t_fdf	*fdf;
+
+	fdf = data;
+	printf("angz %f | angx: %f\n", fdf->cam.angz, fdf->cam.angx);
 }
 
-int	main(int argc, char *argv[])
+// Exit the program as failure.
+static void	ft_mlx_error(t_fdf *fdf)
+{
+	free_fdf(fdf);
+	ft_putstr_fd((char *)mlx_strerror(mlx_errno), 2);
+	exit(EXIT_FAILURE);
+}
+
+int32_t	main(int32_t argc, char *argv[])
 {
 	t_fdf	*fdf;
 
 	fdf = init_fdf(argc, argv);
 	if (!fdf)
 		return (1);
+	fdf->mlx = mlx_init(MLXWIDTH, MLXHEIGHT, "MLX42", true);
+	if (!fdf->mlx)
+		ft_mlx_error(fdf);
+	fdf->image = mlx_new_image(fdf->mlx, IMAGEWIDTH, IMAGEHEIGHT);
+	if (!fdf->image)
+	{
+		mlx_close_window(fdf->mlx);
+		ft_mlx_error(fdf);
+	}
+	if (mlx_image_to_window(fdf->mlx, fdf->image, 0, 0) == -1)
+	{
+		mlx_close_window(fdf->mlx);
+		ft_mlx_error(fdf);
+	}
+	mlx_loop_hook(fdf->mlx, ft_hook_print, fdf);
+	mlx_loop_hook(fdf->mlx, ft_line, fdf);
+	mlx_loop_hook(fdf->mlx, ft_hook, fdf);
+	mlx_loop(fdf->mlx);
+	mlx_terminate(fdf->mlx);
 	free_fdf(fdf);
-	return (0);
+	return (EXIT_SUCCESS);
 }
