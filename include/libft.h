@@ -6,7 +6,7 @@
 /*   By: apimikov <apimikov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/07 10:14:33 by apimikov          #+#    #+#             */
-/*   Updated: 2024/01/08 10:30:06 by apimikov         ###   ########.fr       */
+/*   Updated: 2024/01/30 18:00:37 by apimikov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,5 +77,11 @@ int		ft_printchar(char c);
 int		ft_printstr(char *s);
 int		ft_printbase(long nbr, const char *str_base);
 int		ft_printbase_ulong(unsigned long long nb, const char *str_base);
+
+// ft_math_f
+int		ft_abs_i(int i);
+int		ft_sign(int i);
+int		ft_max(int a, int b);
+int		ft_min(int a, int b);
 
 #endif 

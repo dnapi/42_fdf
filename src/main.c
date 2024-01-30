@@ -9,9 +9,11 @@
 int32_t	ft_pixel(int32_t r, int32_t g, int32_t b, int32_t a)
 {
 	return (r << 24 | g << 16 | b << 8 | a);
+
 }
 
-int	ft_abs(int i)
+/*
+int ft_abs_i(int i)
 {
 	return (i * (i >= 0) - i * (i < 0));
 }
@@ -30,7 +32,9 @@ int	ft_min(int a, int b)
 {
 	return (a * (a <= b) + b * (a > b));
 }
+*/
 
+/*
 void	move_vec(int k, t_fdf *fdf, int j, int i)
 {
 	float	n;
@@ -63,8 +67,8 @@ int	is_pixel(t_vec r0, t_fdf *fdf)
 
 void	set_bresenham(t_vec r0, t_vec r1, t_brsnhm *brs)
 {
-	brs->d[0] = ft_abs(r1.x - r0.x);
-	brs->d[1] = ft_abs(r1.y - r0.y);
+	brs->d[0] = ft_abs_i(r1.x - r0.x);
+	brs->d[1] = ft_abs_i(r1.y - r0.y);
 	brs->s[0] = ft_sign(r1.x - r0.x);
 	brs->s[1] = ft_sign(r1.y - r0.y);
 	brs->e[0] = brs->d[0] - brs->d[1];
@@ -96,42 +100,9 @@ void	bresenham_mod(t_vec r0, t_vec r1, t_fdf *fdf)
 	if (is_pixel(r0, fdf))
 		mlx_put_pixel(fdf->image, r0.x, r0.y, color);
 }
-
-/*
-void bresenham_mod(t_vec r0, t_vec r1, t_fdf *fdf) 
-{
-
-	int	d[2];
-	int	s[2];
-  int err[2];
-	uint32_t color;
-
-	d[0] = ft_abs(r1.x - r0.x);
-	d[1] = ft_abs(r1.y - r0.y);
-	s[0] = ft_sign(r1.x - r0.x);
-	s[1] = ft_sign(r1.y - r0.y);
-	err[0] = d[0] - d[1];
-	color = 0xFFFFFFFF;	
-	while (r0.x != r1.x || r0.y != r1.y)
-	{
-		if (is_pixel(r0, fdf))
-			mlx_put_pixel(fdf->image, r0.x, r0.y, color);
-		err[1] = 2 * err[0];
-		if (err[1] > -d[1]) 
-		{
-			err[0] -= d[1];
-			r0.x += s[0];
-		}
-		if (err[1] < d[0]) 
-		{
-			err[0] += d[0];
-			r0.y += s[1];
-    }
-	}
-	if (is_pixel(r0, fdf))
-		mlx_put_pixel(fdf->image, r0.x, r0.y, color);
-}
 */
+
+
 /*
 void	fill_image(t_fdf *fdf) 
 {

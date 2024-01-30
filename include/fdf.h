@@ -6,7 +6,7 @@
 /*   By: apimikov <apimikov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 07:20:43 by apimikov          #+#    #+#             */
-/*   Updated: 2024/01/29 07:17:36 by apimikov         ###   ########.fr       */
+/*   Updated: 2024/01/30 17:59:11 by apimikov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,10 +77,16 @@ typedef struct s_brsnhm
 t_fdf	*init_fdf(int argc, char *argv[]);
 void	free_fdf(t_fdf *fdf);
 
-//ft_math  functions
-int		ft_abs(int i);
-int		ft_sign(int i);
-int		ft_min(int a, int b);
-int		ft_max(int a, int b);
+//bresenham.c
+void    move_vec(int k, t_fdf *fdf, int j, int i);
+int 	is_pixel(t_vec r0, t_fdf *fdf);
+void    set_bresenham(t_vec r0, t_vec r1, t_brsnhm *brs);
+void    bresenham_mod(t_vec r0, t_vec r1, t_fdf *fdf);
+
+//ft_math  functions  -> moved to libft
+//int		ft_abs(int i);
+//int		ft_sign(int i);
+//int		ft_min(int a, int b);
+//int		ft_max(int a, int b);
 
 #endif

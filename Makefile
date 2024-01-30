@@ -7,12 +7,12 @@ SRC_DIR = src/
 INC_DIR = include/
 GLFW_DIR = /Users/apimikov/.brew/opt/glfw/lib
 
-#SRC_NAMES = main.c get_next_line.c get_next_line_utils.c
-SRC_NAMES = test.c
+SRC_NAMES = main.c parcer.c bresenham.c \
+			get_next_line.c get_next_line_utils.c
 
 CFLAGS	= -Wextra -Wall -Werror -Wunreachable-code -Ofast
 
-HEADERS	= -I./include -I $(LIBMLX)/include  -I./libft
+HEADERS	= -I./include -I$(LIBMLX)/include  -I./$(LIBFT_DIR)
 
 LIBMLX	= ./libmlx42
 LIBS	= $(LIBMLX)/build/libmlx42.a -ldl -lglfw -L$(GLFW_DIR) -pthread -lm
@@ -31,7 +31,7 @@ $(LIBFT):
 
 
 $(NAME): $(OBJS) $(LIBFT)
-	cc $(FLAGS) $(OBJS) $(LIBS) $(LIBFT) $(HEADERS) -o $(NAME)
+	cc $(FLAGS) $(OBJS) $(LIBS)  $(HEADERS)  $(LIBFT) -o $(NAME)
 
 #$(NAME): $(OBJS) $(LIBFT)
 #	cc $(FLAGS) $(OBJS) $(LIBFT) $(HEADERS) -o $(NAME)
