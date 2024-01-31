@@ -1,8 +1,5 @@
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
-#include <unistd.h>
+//#include <stdint.h>
+//#include <stdbool.h>
 #include "../include/MLX42.h"
 #include "../include/fdf.h"
 
@@ -28,17 +25,8 @@ void	fill_image(t_fdf *fdf)
 }
 */
 
-void	ft_line(void *data)
+void	ft_plot_lines(t_fdf *fdf, int i, int j)
 {
-	t_fdf	*fdf;
-	int		i;
-	int		j;
-
-	fdf = data;
-	ft_memset(fdf->image->pixels, CHANNELBACK,
-		fdf->image->width * fdf->image->height * sizeof(int32_t));
-	i = -1;
-	j = -1;
 	while (++j < fdf->size_y - 1)
 	{
 		i = -1;
@@ -61,6 +49,20 @@ void	ft_line(void *data)
 		move_vec(1, fdf, j, i + 1);
 		bresenham_mod(fdf->vec[0], fdf->vec[1], fdf);
 	}
+}
+
+void	ft_fdf(void *data)
+{
+	t_fdf	*fdf;
+	int		i;
+	int		j;
+
+	fdf = data;
+	ft_memset(fdf->image->pixels, CHANNELBACK,
+		fdf->image->width * fdf->image->height * sizeof(int32_t));
+	i = -1;
+	j = -1;
+	ft_plot_lines(fdf, i, j);
 }
 
 void	ft_hook(void *data)
@@ -98,8 +100,10 @@ static void	ft_hook_print(void *data)
 }
 
 // Exit the program as failure.
-static void	ft_mlx_error(t_fdf *fdf)
+static void	ft_mlx_error(t_fdf *fdf, int close_win)
 {
+	if (close_win)
+		mlx_close_window(fdf->mlx);
 	free_fdf(fdf);
 	ft_putstr_fd((char *)mlx_strerror(mlx_errno), 2);
 	exit(EXIT_FAILURE);
@@ -114,20 +118,14 @@ int32_t	main(int32_t argc, char *argv[])
 		return (1);
 	fdf->mlx = mlx_init(MLXWIDTH, MLXHEIGHT, "MLX42", true);
 	if (!fdf->mlx)
-		ft_mlx_error(fdf);
+		ft_mlx_error(fdf, 0);
 	fdf->image = mlx_new_image(fdf->mlx, IMAGEWIDTH, IMAGEHEIGHT);
 	if (!fdf->image)
-	{
-		mlx_close_window(fdf->mlx);
-		ft_mlx_error(fdf);
-	}
+		ft_mlx_error(fdf, 1);
 	if (mlx_image_to_window(fdf->mlx, fdf->image, 0, 0) == -1)
-	{
-		mlx_close_window(fdf->mlx);
-		ft_mlx_error(fdf);
-	}
+		ft_mlx_error(fdf, 1);
 	mlx_loop_hook(fdf->mlx, ft_hook_print, fdf);
-	mlx_loop_hook(fdf->mlx, ft_line, fdf);
+	mlx_loop_hook(fdf->mlx, ft_fdf, fdf);
 	mlx_loop_hook(fdf->mlx, ft_hook, fdf);
 	mlx_loop(fdf->mlx);
 	mlx_terminate(fdf->mlx);
