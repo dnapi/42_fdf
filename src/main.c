@@ -65,7 +65,7 @@ void	ft_fdf(void *data)
 	ft_plot_lines(fdf, i, j);
 }
 
-void	ft_hook(void *data)
+void	ft_hook_key(void *data)
 {
 	t_fdf	*fdf;
 
@@ -86,9 +86,23 @@ void	ft_hook(void *data)
 		fdf->cam.zoom /= 1.1;
 	if (mlx_is_key_down(fdf->mlx, MLX_KEY_R))
 		fdf->cam.angx += 0.05;
+	if (mlx_is_key_down(fdf->mlx, MLX_KEY_E))
+		fdf->cam.angx -= 0.05;
 	if (mlx_is_key_down(fdf->mlx, MLX_KEY_F))
 		fdf->cam.angz += 0.05;
+	if (mlx_is_key_down(fdf->mlx, MLX_KEY_D))
+		fdf->cam.angz -= 0.05;
 }
+
+void my_keyhook(mlx_key_data_t keydata, void* data)
+{
+	t_fdf *fdf;
+
+	fdf = data;
+	if (keydata.key == MLX_KEY_C && keydata.action == MLX_PRESS)
+		fdf->cam.color = (fdf->cam.color + 1) % 4;
+}
+
 
 // Print the window width and height.
 static void	ft_hook_print(void *data)
@@ -96,7 +110,7 @@ static void	ft_hook_print(void *data)
 	t_fdf	*fdf;
 
 	fdf = data;
-	printf("angz %f | angx: %f\n", fdf->cam.angz, fdf->cam.angx);
+	printf("z->%f | x->%f | c->%d\n", fdf->cam.angz, fdf->cam.angx, fdf->cam.color);
 }
 
 // Exit the program as failure.
@@ -126,7 +140,8 @@ int32_t	main(int32_t argc, char *argv[])
 		ft_mlx_error(fdf, 1);
 	mlx_loop_hook(fdf->mlx, ft_hook_print, fdf);
 	mlx_loop_hook(fdf->mlx, ft_fdf, fdf);
-	mlx_loop_hook(fdf->mlx, ft_hook, fdf);
+	mlx_loop_hook(fdf->mlx, ft_hook_key, fdf);
+	mlx_key_hook(fdf->mlx, &my_keyhook, fdf);
 	mlx_loop(fdf->mlx);
 	mlx_terminate(fdf->mlx);
 	free_fdf(fdf);

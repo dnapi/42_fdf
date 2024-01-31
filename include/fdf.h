@@ -6,7 +6,7 @@
 /*   By: apimikov <apimikov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 07:20:43 by apimikov          #+#    #+#             */
-/*   Updated: 2024/01/30 17:59:11 by apimikov         ###   ########.fr       */
+/*   Updated: 2024/01/31 17:04:22 by apimikov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,14 @@
 # define MLXWIDTH 1200
 # define MLXHEIGHT 1200
 # define IMAGEBACKGROUND 0xff0000ff 
-# define CHANNELBACK 100 
+# define CHANNELBACK 100
+# define DEFAULTCOLOR 0xffffffff
+# define REDMIN 0
+# define GREENMIN 0
+# define BLUEMIN 254
+# define REDMAX 255
+# define GREENMAX 255
+# define BLUEMAX 255
 
 # include <stdio.h>
 # include <fcntl.h>
@@ -48,23 +55,24 @@ typedef struct s_camera
 	int		shifty;
 	float	zoom;
 	int		iso;
+	int		color;
 }	t_camera;
 
 typedef struct s_fdf
 {
-	char				**argv;
-	int					**z;
-	int					**c;
-	size_t			size_x;
-	size_t			size_y;
-	int					min_z;
-	int					max_z;
-	int					error;
-	int					fd;
-	mlx_t				*mlx;
+	char		**argv;
+	long		**z;
+	long		**c;
+	size_t		size_x;
+	size_t		size_y;
+	long		min_z;
+	long		max_z;
+	int			error;
+	int			fd;
+	mlx_t		*mlx;
 	mlx_image_t	*image;
-	t_vec				vec[2];
-	t_camera		cam;
+	t_vec		vec[2];
+	t_camera	cam;
 }	t_fdf;
 
 typedef struct s_brsnhm

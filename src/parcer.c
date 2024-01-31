@@ -83,19 +83,19 @@ int	set_size_xy(t_fdf *fdf)
 }
 
 // init z matrix
-int	**alloc_2d_int(size_t size_x, size_t size_y)
+long	**alloc_2d_int(size_t size_x, size_t size_y)
 {
-	int	**z;
-	int	i;
-	int	x;
+	long	**z;
+	size_t	i;
+	size_t	x;
 
-	z = (int **)malloc(sizeof(int *) * size_y);
+	z = (long **)malloc(sizeof(long *) * size_y);
 	if (!z)
 		return (null_err("Error: memory problem \n"));
 	i = -1;
 	while (++i < size_y)
 	{
-		z[i] = (int *)malloc(sizeof(int) * size_x);
+		z[i] = (long *)malloc(sizeof(long) * size_x);
 		if (!z[i])
 		{
 			while (--i >= 0)
@@ -110,13 +110,33 @@ int	**alloc_2d_int(size_t size_x, size_t size_y)
 	return (z);
 }
 
-void	str_to_int(char **str, int *row, size_t size)
+void	str_to_long(char **str, long *row, size_t size)
 {
 	size_t	i;
 
 	i = -1;
 	while (++i < size)
-		row[i] = ft_atoi(str[i]);
+		row[i] = ft_atoil(str[i]);
+}
+
+void	str_to_color(char **str, long *row, size_t size, t_fdf *fdf)
+{
+	size_t	i;
+	char	*pnt;
+
+	i = -1;
+	while (++i < size)
+	{
+		pnt = str[i];
+		while (*pnt && *pnt != ',')
+			pnt++;
+		if (*pnt == '\0')
+			row[i] = DEFAULTCOLOR;
+		else
+			row[i] = ft_atoi_hex(pnt + 1);
+		if ((row[i] >> 32) > 0)
+			exit(value_err_free("wrong color format\n", 1, fdf));
+	}
 }
 
 void	print_array_1d(int *row, size_t size)
@@ -132,17 +152,25 @@ void	print_array_1d(int *row, size_t size)
 	ft_putstr_fd("\n", 1);
 }
 
+void	init_zc_matrices(t_fdf *fdf)
+{
+	long	*c;
+
+	fdf->z = alloc_2d_int(fdf->size_x, fdf->size_y);
+	if (!fdf->z)
+		exit(value_err_free("Error: malloc alloc_2d_int\n", 1, fdf));
+	fdf->c = alloc_2d_int(fdf->size_x, fdf->size_y);
+	if (!fdf->c)
+		exit(value_err_free("Error: malloc alloc_2d_int\n", 1, fdf));
+}
+
 void	set_z_matrix(t_fdf *fdf)
 {
 	char	*str;
 	char	**row;
 	size_t	y;
 
-	fdf->z = alloc_2d_int(fdf->size_x, fdf->size_y);
-	if (!fdf->z)
-		exit(value_err_free("Error: malloc alloc_2d_int\n", 1, fdf));
-	if (!fdf->z)
-		exit(value_err_free("Error: memory problem\n", 1, fdf));
+	init_zc_matrices(fdf);
 	y = -1;
 	while (++y < fdf->size_y)
 	{
@@ -151,7 +179,10 @@ void	set_z_matrix(t_fdf *fdf)
 			break ;
 		row = ft_split(str, ' ');
 		free(str);
-		str_to_int(row, fdf->z[y], fdf->size_x);
+		if (!row)
+			exit(value_err_free("Error: close file error\n", 1, fdf));
+		str_to_long(row, fdf->z[y], fdf->size_x);
+		str_to_color(row, fdf->c[y], fdf->size_x, fdf);
 		ft_free_char2d(row);
 	}
 	if (close(fdf->fd) == -1)
@@ -163,7 +194,7 @@ void	set_z_minmax(t_fdf *fdf)
 {
 	size_t	i;
 	size_t	j;
-	int		z[2];
+	long	z[2];
 
 	z[0] = 0;
 	z[1] = 0;
@@ -189,16 +220,13 @@ void	set_camera(t_fdf *fdf)
 	fdf->cam.shiftx = 0;
 	fdf->cam.shifty = 0;
 	fdf->cam.zoom = 1;
+	fdf->cam.color = 0;
 }
-
-//  init_fdf 
 
 t_fdf	*init_fdf(int argc, char *argv[])
 {
 	t_fdf	*fdf;
 	char	*pnt;
-	int		dim_y;
-	int		dim_x;
 
 	if (argc != 2)
 		return (null_err("Error: wrong number of arguments.\n"));
@@ -231,14 +259,17 @@ void	ft_free_char2d(char **split)
 	free(split);
 }
 
-void	free_int_2d(int **m)
+void	free_int_2d(long **m)
 {
 	size_t	i;
 
+	if (!m)
+		return ;
 	i = 0;
 	while (m[i])
 	{
-		free(m[i]);
+		if (m[i])
+			free(m[i]);
 		i++;
 	}
 	free(m);

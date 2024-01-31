@@ -6,7 +6,7 @@
 /*   By: apimikov <apimikov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/07 10:14:33 by apimikov          #+#    #+#             */
-/*   Updated: 2024/01/30 18:00:37 by apimikov         ###   ########.fr       */
+/*   Updated: 2024/01/31 11:07:04 by apimikov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,5 +83,8 @@ int		ft_abs_i(int i);
 int		ft_sign(int i);
 int		ft_max(int a, int b);
 int		ft_min(int a, int b);
+
+long	ft_atoi_hex(const char *str);
+long	ft_atoil(const char *str);
 
 #endif 
