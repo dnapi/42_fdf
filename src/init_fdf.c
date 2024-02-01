@@ -6,7 +6,7 @@
 /*   By: apimikov <apimikov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 11:03:59 by apimikov          #+#    #+#             */
-/*   Updated: 2024/02/01 11:04:01 by apimikov         ###   ########.fr       */
+/*   Updated: 2024/02/01 15:41:45 by apimikov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,10 +75,8 @@ void	free_fdf(t_fdf *fdf)
 {
 	if (!fdf)
 		return ;
-	if (!fdf->z)
-		free_int_2d(fdf->z, fdf->size_y);
-	if (!fdf->c)
-		free_int_2d(fdf->c, fdf->size_y);
+	free_int_2d(fdf->z, fdf->size_y);
+	free_int_2d(fdf->c, fdf->size_y);
 	free(fdf);
 	fdf = NULL;
 }

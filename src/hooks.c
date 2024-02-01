@@ -6,7 +6,7 @@
 /*   By: apimikov <apimikov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 10:06:54 by apimikov          #+#    #+#             */
-/*   Updated: 2024/02/01 10:07:02 by apimikov         ###   ########.fr       */
+/*   Updated: 2024/02/01 15:47:23 by apimikov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ void	ft_hook_print(void *data)
 	t_fdf	*fdf;
 
 	fdf = data;
-	ft_printf("z->%d | x->%d | c->%d\n", (int)(360 * fdf->cam.angz / PI), \
-		(int)(360 * fdf->cam.angx / 2 / PI), fdf->cam.color);
+	ft_printf("z=%d | x=%d | c=%d\n", \
+			(int)(360 * fdf->cam.angz / PI), \
+			(int)(360 * fdf->cam.angx / 2 / PI), fdf->cam.color);
 }

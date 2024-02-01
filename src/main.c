@@ -6,7 +6,7 @@
 /*   By: apimikov <apimikov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 10:07:51 by apimikov          #+#    #+#             */
-/*   Updated: 2024/02/01 10:07:53 by apimikov         ###   ########.fr       */
+/*   Updated: 2024/02/01 15:42:12 by apimikov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,5 @@ int32_t	main(int32_t argc, char *argv[])
 	mlx_loop(fdf->mlx);
 	mlx_terminate(fdf->mlx);
 	free_fdf(fdf);
-
-	while (1)
-		;
 	return (EXIT_SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: apimikov <apimikov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 11:04:15 by apimikov          #+#    #+#             */
-/*   Updated: 2024/02/01 11:04:18 by apimikov         ###   ########.fr       */
+/*   Updated: 2024/02/01 12:45:48 by apimikov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	check_format_z(char *str)
 			return (1);
 		i++;
 	}
-	if (i == 1 && (str[i - 1] == '+' || str[i - 1] == '-') || i > 11)
+	if ((i == 1 && (str[i - 1] == '+' || str[i - 1] == '-')) || i > 11)
 		return (1);
 	return (0);
 }
