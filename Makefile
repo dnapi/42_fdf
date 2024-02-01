@@ -11,7 +11,7 @@ SRC_NAMES = main.c init_fdf.c init_fdf_utils.c read_row.c \
 					hooks.c error_msg.c set_size.c \
           bresenham.c bresenham_utils.c
 
-CFLAGS	= -Wextra -Wall -Werror -Wunreachable-code -Ofast -g
+CFLAGS	= -Wextra -Wall -Werror -Wunreachable-code -Ofast
 
 HEADERS	= -I./include -I$(LIBMLX)/include  -I./$(LIBFT_DIR)
 
@@ -25,7 +25,7 @@ OBJS	= ${SRCS:.c=.o}
 all: $(NAME)
 
 $(NAME): $(SRCS) $(OBJS) $(LIBFT) $(MLX)
-	cc $(FLAGS) $(OBJS) $(LIBS)  $(HEADERS)  $(LIBFT) -o $(NAME)
+	cc $(FLAGS) $(OBJS) $(LIBS) $(HEADERS)  $(LIBFT) -o $(NAME)
 
 %.o: %.c
 	cc $(FLAGS) -c $^ -o $@ $(HEADERS)
