@@ -35,7 +35,7 @@ long	ft_atoi_hex(const char *str)
 		str += 2;
 	else
 		return (-1);
-	while (*str != '\0')
+	while (*str != '\0' && *str != '\n')
 	{
 		digit = hex_char2int(*str);
 		if (digit == -1)

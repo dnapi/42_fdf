@@ -111,5 +111,4 @@ char	*get_next_line(int fd);
 int		gnl_init_node(t_gnl_list **pnt_l);
 size_t	gnl_nl(const char *s);
 
-
 #endif 

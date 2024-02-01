@@ -1,4 +1,6 @@
 
+valgrind --trace-children=yes --pid=<PID>
+
 Bresenham's algorithm
 
 screenshot   command + shift+ 5
