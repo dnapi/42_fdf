@@ -16,8 +16,8 @@
 //#include <cstdint>
 # define IMAGEWIDTH 1100
 # define IMAGEHEIGHT 1100
-# define MLXWIDTH 1200
-# define MLXHEIGHT 1200
+# define MLXWIDTH 1100
+# define MLXHEIGHT 1100
 # define IMAGEBACKGROUND 0xff0000ff 
 # define CHANNELBACK 100
 # define DEFAULTCOLOR 0xffffffff
@@ -27,17 +27,16 @@
 # define REDMAX 255
 # define GREENMAX 255
 # define BLUEMAX 255
+# define PI 3.14
 
-# include <stdio.h>
+//# include <stdio.h>
 # include <fcntl.h>
 # include <unistd.h>
-# include <stdlib.h>
-# include <stdio.h>
-# include <string.h>
+//# include <stdlib.h>
+//# include <string.h>
 # include <math.h>
 # include "libft.h"
 # include "MLX42.h"
-# include "get_next_line.h"
 
 typedef	struct s_vec
 {
@@ -85,16 +84,12 @@ typedef struct s_brsnhm
 t_fdf	*init_fdf(int argc, char *argv[]);
 void	free_fdf(t_fdf *fdf);
 
-//bresenham.c
+//bresenham.c bresenham_utils.c
+void	ft_plot_lines(t_fdf *fdf, int i, int j);
 void    move_vec(int k, t_fdf *fdf, int j, int i);
 int 	is_pixel(t_vec r0, t_fdf *fdf);
 void    set_bresenham(t_vec r0, t_vec r1, t_brsnhm *brs);
 void    bresenham_mod(t_vec r0, t_vec r1, t_fdf *fdf);
-
-//ft_math  functions  -> moved to libft
-//int		ft_abs(int i);
-//int		ft_sign(int i);
-//int		ft_min(int a, int b);
-//int		ft_max(int a, int b);
+uint32_t	color_select(t_brsnhm *brs, t_vec r0, t_vec r1, t_fdf *fdf);
 
 #endif

@@ -244,6 +244,7 @@ t_fdf	*init_fdf(int argc, char *argv[])
 	return (fdf);
 }
 
+
 void	ft_free_char2d(char **split)
 {
 	size_t	i;

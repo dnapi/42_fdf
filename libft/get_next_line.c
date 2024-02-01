@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "libft.h"
 
 int		read_once(int fd, t_gnl_list **pnt_l);
 char	*read_line(int fd, t_gnl_list **buffer);

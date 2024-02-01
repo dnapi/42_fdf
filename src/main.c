@@ -1,15 +1,12 @@
-//#include <stdint.h>
-//#include <stdbool.h>
 #include "../include/MLX42.h"
 #include "../include/fdf.h"
 
+/*
 int32_t	ft_pixel(int32_t r, int32_t g, int32_t b, int32_t a)
 {
 	return (r << 24 | g << 16 | b << 8 | a);
 
 }
-
-/*
 void	fill_image(t_fdf *fdf) 
 {
 	int	i;
@@ -25,33 +22,8 @@ void	fill_image(t_fdf *fdf)
 }
 */
 
-void	ft_plot_lines(t_fdf *fdf, int i, int j)
-{
-	while (++j < fdf->size_y - 1)
-	{
-		i = -1;
-		while (++i < fdf->size_x - 1)
-		{
-			move_vec(0, fdf, j, i);
-			move_vec(1, fdf, j + 1, i);
-			bresenham_mod(fdf->vec[0], fdf->vec[1], fdf);
-			move_vec(1, fdf, j, i + 1);
-			bresenham_mod(fdf->vec[0], fdf->vec[1], fdf);
-		}
-		move_vec(0, fdf, j, i);
-		move_vec(1, fdf, j + 1, i);
-		bresenham_mod(fdf->vec[0], fdf->vec[1], fdf);
-	}
-	i = -1;
-	while (++i < fdf->size_x - 1)
-	{
-		move_vec(0, fdf, j, i);
-		move_vec(1, fdf, j, i + 1);
-		bresenham_mod(fdf->vec[0], fdf->vec[1], fdf);
-	}
-}
 
-void	ft_fdf(void *data)
+void	ft_hook_image(void *data)
 {
 	t_fdf	*fdf;
 	int		i;
@@ -65,6 +37,7 @@ void	ft_fdf(void *data)
 	ft_plot_lines(fdf, i, j);
 }
 
+/*
 void	ft_hook_key(void *data)
 {
 	t_fdf	*fdf;
@@ -93,16 +66,43 @@ void	ft_hook_key(void *data)
 	if (mlx_is_key_down(fdf->mlx, MLX_KEY_D))
 		fdf->cam.angz -= 0.05;
 }
+*/
 
-void my_keyhook(mlx_key_data_t keydata, void* data)
+void	ft_hook_key(void *fdf)
 {
-	t_fdf *fdf;
+	if (mlx_is_key_down(((t_fdf *)fdf)->mlx, MLX_KEY_ESCAPE))
+		mlx_close_window(((t_fdf *)fdf)->mlx);
+	if (mlx_is_key_down(((t_fdf *)fdf)->mlx, MLX_KEY_UP))
+		((t_fdf *)fdf)->cam.shifty -= 5;
+	if (mlx_is_key_down(((t_fdf *)fdf)->mlx, MLX_KEY_DOWN))
+		((t_fdf *)fdf)->cam.shifty += 5;
+	if (mlx_is_key_down(((t_fdf *)fdf)->mlx, MLX_KEY_LEFT))
+		((t_fdf *)fdf)->cam.shiftx -= 5;
+	if (mlx_is_key_down(((t_fdf *)fdf)->mlx, MLX_KEY_RIGHT))
+		((t_fdf *)fdf)->cam.shiftx += 5;
+	if (mlx_is_key_down(((t_fdf *)fdf)->mlx, MLX_KEY_Z))
+		((t_fdf *)fdf)->cam.zoom *= 1.1;
+	if (mlx_is_key_down(((t_fdf *)fdf)->mlx, MLX_KEY_X) && \
+		((t_fdf *)fdf)->cam.zoom > 0.01)
+		((t_fdf *)fdf)->cam.zoom /= 1.1;
+	if (mlx_is_key_down(((t_fdf *)fdf)->mlx, MLX_KEY_R))
+		((t_fdf *)fdf)->cam.angx += 0.05;
+	if (mlx_is_key_down(((t_fdf *)fdf)->mlx, MLX_KEY_E))
+		((t_fdf *)fdf)->cam.angx -= 0.05;
+	if (mlx_is_key_down(((t_fdf *)fdf)->mlx, MLX_KEY_F))
+		((t_fdf *)fdf)->cam.angz += 0.05;
+	if (mlx_is_key_down(((t_fdf *)fdf)->mlx, MLX_KEY_D))
+		((t_fdf *)fdf)->cam.angz -= 0.05;
+}
+
+void	keyhook_event(mlx_key_data_t keydata, void *data)
+{
+	t_fdf	*fdf;
 
 	fdf = data;
 	if (keydata.key == MLX_KEY_C && keydata.action == MLX_PRESS)
 		fdf->cam.color = (fdf->cam.color + 1) % 4;
 }
-
 
 // Print the window width and height.
 static void	ft_hook_print(void *data)
@@ -110,7 +110,8 @@ static void	ft_hook_print(void *data)
 	t_fdf	*fdf;
 
 	fdf = data;
-	printf("z->%f | x->%f | c->%d\n", fdf->cam.angz, fdf->cam.angx, fdf->cam.color);
+	ft_printf("z->%d | x->%d | c->%d\n", (int)(360 * fdf->cam.angz / PI), \
+		(int)(360 * fdf->cam.angx / 2 / PI), fdf->cam.color);
 }
 
 // Exit the program as failure.
@@ -139,9 +140,9 @@ int32_t	main(int32_t argc, char *argv[])
 	if (mlx_image_to_window(fdf->mlx, fdf->image, 0, 0) == -1)
 		ft_mlx_error(fdf, 1);
 	mlx_loop_hook(fdf->mlx, ft_hook_print, fdf);
-	mlx_loop_hook(fdf->mlx, ft_fdf, fdf);
+	mlx_loop_hook(fdf->mlx, ft_hook_image, fdf);
 	mlx_loop_hook(fdf->mlx, ft_hook_key, fdf);
-	mlx_key_hook(fdf->mlx, &my_keyhook, fdf);
+	mlx_key_hook(fdf->mlx, &keyhook_event, fdf);
 	mlx_loop(fdf->mlx);
 	mlx_terminate(fdf->mlx);
 	free_fdf(fdf);
