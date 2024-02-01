@@ -4,12 +4,17 @@ LIBFT_DIR = libft
 LIBFT = $(LIBFT_DIR)/libft.a
 
 SRC_DIR = src/
+SRC_DIR_B = src_bonus/
 INC_DIR = include/
 GLFW_DIR = /Users/apimikov/.brew/opt/glfw/lib
 
 SRC_NAMES = main.c init_fdf.c init_fdf_utils.c read_row.c \
-					hooks.c error_msg.c set_size.c \
-          bresenham.c bresenham_utils.c
+		hooks.c error_msg.c set_size.c \
+		bresenham.c bresenham_utils.c
+
+SRC_NAMES_B = main_bonus.c init_fdf_bonus.c init_fdf_utils_bonus.c read_row_bonus.c \
+		hooks_bonus.c error_msg_bonus.c set_size_bonus.c \
+		bresenham_bonus.c bresenham_utils_bonus.c
 
 CFLAGS	= -Wextra -Wall -Werror -Wunreachable-code -Ofast
 
@@ -20,11 +25,13 @@ LIBS	= $(LIBMLX)/build/libmlx42.a -ldl -lglfw -L$(GLFW_DIR) -pthread -lm
 MLX	= $(LIBMLX)/build/libmlx42.a
 
 SRCS = $(addprefix $(SRC_DIR), $(SRC_NAMES))
+SRCS_B = $(addprefix $(SRC_DIR_B), $(SRC_NAMES_B))
 OBJS	= ${SRCS:.c=.o}
+OBJS_B	= ${SRCS_B:.c=.o}
 
 all: $(NAME)
 
-$(NAME): $(SRCS) $(OBJS) $(LIBFT) $(MLX)
+$(NAME): $(SRCS) $(OBJS) $(LIBFT) $(MLX) .name
 	cc $(FLAGS) $(OBJS) $(LIBS) $(HEADERS)  $(LIBFT) -o $(NAME)
 
 %.o: %.c
@@ -36,14 +43,28 @@ $(MLX):
 $(LIBFT):
 	$(MAKE) -C $(LIBFT_DIR)
 
+bonus: .bonus
+
+.bonus: $(SRCS_B) $(OBJS_B) $(LIBFT) $(MLX)
+	cc $(FLAGS) $(OBJS_B) $(LIBS) $(HEADERS)  $(LIBFT) -o $(NAME)
+	rm -f .name
+	touch .bonus
+
+.name:
+	rm -f .bonus
+	touch .name
+
 clean:
 	@rm -rf $(OBJS)
+	@rm -rf $(OBJS_B)
 	@rm -rf $(LIBMLX)/build
 	$(MAKE) -C $(LIBFT_DIR) fclean
+	rm -f .name
+	rm -f .bonus
 
 fclean: clean
 	@rm -rf $(NAME)
 
 re: clean all
 
-.PHONY: all, clean, fclean, re, libmlx
+.PHONY: all, clean, fclean, re, libmlx, bonus

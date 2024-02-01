@@ -6,7 +6,7 @@
 /*   By: apimikov <apimikov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 07:20:43 by apimikov          #+#    #+#             */
-/*   Updated: 2024/02/01 16:51:39 by apimikov         ###   ########.fr       */
+/*   Updated: 2024/02/01 15:45:21 by apimikov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,8 @@ uint32_t	color_select(t_brsnhm *brs, t_vec r0, t_vec r1, t_fdf *fdf);
 //hooks.c
 void		ft_hook_image(void *data);
 void		ft_hook_key(void *fdf);
+void		keyhook_event(mlx_key_data_t keydata, void *data);
+void		ft_hook_print(void *data);
 
 //error_msg.c
 void		*null_err(char *msg);

@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   bresenham.c                                        :+:      :+:    :+:   */
+/*   bresenham_bonus.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: apimikov <apimikov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/30 17:55:14 by apimikov          #+#    #+#             */
-/*   Updated: 2024/02/01 16:35:33 by apimikov         ###   ########.fr       */
+/*   Created: 2024/02/01 16:24:04 by apimikov          #+#    #+#             */
+/*   Updated: 2024/02/01 16:24:06 by apimikov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/fdf.h"
+#include "../include/fdf_bonus.h"
 
 void	set_bresenham(t_vec r0, t_vec r1, t_brsnhm *brs)
 {

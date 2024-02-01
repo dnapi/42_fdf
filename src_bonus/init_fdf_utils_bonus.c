@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init_fdf_utils.c                                   :+:      :+:    :+:   */
+/*   init_fdf_utils_bonus.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: apimikov <apimikov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 11:05:03 by apimikov          #+#    #+#             */
-/*   Updated: 2024/02/01 16:46:34 by apimikov         ###   ########.fr       */
+/*   Updated: 2024/02/01 16:27:58 by apimikov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/fdf.h"
+#include "../include/fdf_bonus.h"
 
 // init z matrix
 long	**alloc_2d_long(size_t size_x, size_t size_y)
@@ -108,5 +108,5 @@ void	set_camera(t_fdf *fdf)
 	fdf->cam.shiftx = 0;
 	fdf->cam.shifty = 0;
 	fdf->cam.zoom = 1;
-	fdf->cam.color = 2;
+	fdf->cam.color = 0;
 }

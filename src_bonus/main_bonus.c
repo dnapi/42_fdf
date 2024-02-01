@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   main_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: apimikov <apimikov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 10:07:51 by apimikov          #+#    #+#             */
-/*   Updated: 2024/02/01 16:50:16 by apimikov         ###   ########.fr       */
+/*   Updated: 2024/02/01 16:34:24 by apimikov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/MLX42.h"
-#include "../include/fdf.h"
+#include "../include/fdf_bonus.h"
 
 // Exit the program as failure.
 static void	ft_mlx_error(t_fdf *fdf, int close_win)
@@ -38,8 +38,10 @@ int32_t	main(int32_t argc, char *argv[])
 		ft_mlx_error(fdf, 1);
 	if (mlx_image_to_window(fdf->mlx, fdf->image, 0, 0) == -1)
 		ft_mlx_error(fdf, 1);
+	mlx_loop_hook(fdf->mlx, ft_hook_print, fdf);
 	mlx_loop_hook(fdf->mlx, ft_hook_image, fdf);
 	mlx_loop_hook(fdf->mlx, ft_hook_key, fdf);
+	mlx_key_hook(fdf->mlx, &keyhook_event, fdf);
 	mlx_loop(fdf->mlx);
 	mlx_terminate(fdf->mlx);
 	free_fdf(fdf);

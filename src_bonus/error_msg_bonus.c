@@ -1,34 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   hooks.c                                            :+:      :+:    :+:   */
+/*   error_msg_bonus.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: apimikov <apimikov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/01 10:06:54 by apimikov          #+#    #+#             */
-/*   Updated: 2024/02/01 16:50:37 by apimikov         ###   ########.fr       */
+/*   Created: 2024/02/01 11:04:30 by apimikov          #+#    #+#             */
+/*   Updated: 2024/02/01 16:26:36 by apimikov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/MLX42.h"
-#include "../include/fdf.h"
+#include "../include/fdf_bonus.h"
 
-void	ft_hook_image(void *data)
+// error msgs
+void	*null_err(char *msg)
 {
-	t_fdf	*fdf;
-	int		i;
-	int		j;
-
-	fdf = data;
-	ft_memset(fdf->image->pixels, CHANNELBACK,
-		fdf->image->width * fdf->image->height * sizeof(int32_t));
-	i = -1;
-	j = -1;
-	ft_plot_lines(fdf, i, j);
+	ft_putstr_fd(msg, 2);
+	return (NULL);
 }
 
-void	ft_hook_key(void *fdf)
+int	value_err(char *msg, int err)
 {
-	if (mlx_is_key_down(((t_fdf *)fdf)->mlx, MLX_KEY_ESCAPE))
-		mlx_close_window(((t_fdf *)fdf)->mlx);
+	ft_putstr_fd(msg, 2);
+	return (err);
+}
+
+int	value_err_free(char *msg, int err, t_fdf *fdf)
+{
+	free_fdf(fdf);
+	ft_putstr_fd(msg, 2);
+	return (err);
 }

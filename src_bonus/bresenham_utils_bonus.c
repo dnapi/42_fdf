@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   bresenham_utils.c                                  :+:      :+:    :+:   */
+/*   bresenham_utils_utils.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: apimikov <apimikov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 17:55:14 by apimikov          #+#    #+#             */
-/*   Updated: 2024/02/01 16:40:27 by apimikov         ###   ########.fr       */
+/*   Updated: 2024/02/01 16:25:22 by apimikov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/fdf.h"
+#include "../include/fdf_bonus.h"
 
 void	move_vec(int k, t_fdf *fdf, int j, int i)
 {
@@ -45,6 +45,7 @@ int	is_pixel(t_vec r0, t_fdf *fdf)
 	return (0);
 }
 
+//	c[0] = (z - fdf->min_z) * (rgb[1] - rgb[0])	/ dz + rgb[0];
 uint32_t	color_gradient(long z, t_vec r0, t_vec r1, t_fdf *fdf)
 {
 	int		c[3];

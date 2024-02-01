@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   set_size.c                                         :+:      :+:    :+:   */
+/*   set_size_bonus.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: apimikov <apimikov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 11:03:19 by apimikov          #+#    #+#             */
-/*   Updated: 2024/02/01 16:42:36 by apimikov         ###   ########.fr       */
+/*   Updated: 2024/02/01 16:27:32 by apimikov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/fdf.h"
+#include "../include/fdf_bonus.h"
 
 //  first reading file -> setting size of map
 static size_t	sizeof_arr(char **str)
