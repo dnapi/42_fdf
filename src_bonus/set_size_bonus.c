@@ -50,10 +50,10 @@ int	set_size_xy(t_fdf *fdf)
 
 	fdf->fd = open(fdf->argv[1], O_RDONLY);
 	if (fdf->fd == -1)
-		exit (value_err_free("Error: can't open file\n", 1, fdf));
+		exit (value_err_free("Error. fdf can't open file\n", 1, fdf));
 	str = get_next_line(fdf->fd);
 	if (!str)
-		exit(value_err_free("Error: Empty file\n", 1, fdf));
+		exit(value_err_free("Error. fdf: Empty file\n", 1, fdf));
 	fdf->size_x = sizeof_line(str);
 	free(str);
 	fdf->size_y = 1;
@@ -63,11 +63,11 @@ int	set_size_xy(t_fdf *fdf)
 		if (!str)
 			break ;
 		if (fdf->size_x != sizeof_line(str))
-			exit(value_err_free("Error: wrong format of the file\n", 1, fdf));
+			exit(value_err_free("Error. fdf: wrong format of the file\n", 1, fdf));
 		free(str);
 		fdf->size_y++;
 	}
 	if (close(fdf->fd) == -1)
-		exit(value_err_free("Error: close file error\n", 1, fdf));
+		exit(value_err_free("Error. fdf: close file error\n", 1, fdf));
 	return (0);
 }
