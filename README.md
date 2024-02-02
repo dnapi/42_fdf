@@ -2,21 +2,20 @@
 
 ## Overview
 
-FdF is a graphical project assigned to students at School 42. The project's objective is to create a simple 3D wireframe renderer from scratch using the MiniLibX or MLX42 library, which provides minimalistic graphics capabilities. FdF stands for "Fil de Fer," which means wireframe in French.
+FdF is a graphical project assigned to students at School 42. The project's objective is to create a simple 3D wireframe renderer from scratch using the MLX42 library, which provides minimalistic graphics capabilities. FdF stands for "Fil de Fer," which means wireframe in French.
 
 ## Requirements
 
 - The program should read a map file containing coordinates that define points in space.
 - It should render a wireframe representation of these points, connecting them to form lines.
-- The wireframe should be displayed in a window with basic controls for navigation and zooming.
-- Perspective should be taken into account for the rendering.
+- The wireframe should be displayed in a window with basic controls for translation, rotation and zooming.
 
 ## Features
 
 1. **Map Parsing**: Read the map file containing the coordinates and parse it to obtain the necessary data for rendering.
 2. **Graphics Rendering**: Utilize the MiniLibX library to create a graphical window and render the wireframe.
 3. **Line Drawing**: Implement algorithms for drawing lines between points to create the wireframe representation.
-4. **Navigation Controls**: Allow users to navigate through the 3D space using keyboard or mouse controls.
+4. **Navigation Controls**: Allow users to navigate through the 3D space using keyboard.
 5. **Perspective Projection**: Implement perspective projection to give depth to the wireframe representation.
 
 ## Technologies Used
