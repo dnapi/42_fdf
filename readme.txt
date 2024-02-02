@@ -1,4 +1,16 @@
+empty file
+.fdf
+non-existing
+wrong number of arguments 0, 3 , ...
 
+wrong imput  :
+wrong shape of data
+wrong color 
+wrong z 
+wrong z and color 
+color = 0x, 0xY, 0xFFFFFFFFZZZ
+
+Leaks --atExit -- ...
 valgrind --trace-children=yes --pid=<PID>
 
 Bresenham's algorithm

@@ -6,7 +6,7 @@
 /*   By: apimikov <apimikov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 07:20:43 by apimikov          #+#    #+#             */
-/*   Updated: 2024/02/01 17:04:56 by apimikov         ###   ########.fr       */
+/*   Updated: 2024/02/02 12:21:59 by apimikov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@
 # include <fcntl.h>
 # include <unistd.h>
 # include <math.h>
+# include <stdio.h>
 # include "libft.h"
 # include "MLX42.h"
 
@@ -49,7 +50,6 @@ typedef struct s_camera
 	int		shiftx;
 	int		shifty;
 	float	zoom;
-	int		iso;
 	int		color;
 }	t_camera;
 
@@ -100,6 +100,7 @@ void		ft_hook_print(void *data);
 void		*null_err(char *msg);
 int			value_err(char *msg, int err);
 int			value_err_free(char *msg, int err, t_fdf *fdf);
+int			perror_value_free(char *msg, int err, t_fdf *fdf);
 
 //set_size.c
 int			set_size_xy(t_fdf *fdf);

@@ -6,7 +6,7 @@
 /*   By: apimikov <apimikov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 11:03:19 by apimikov          #+#    #+#             */
-/*   Updated: 2024/02/01 16:42:36 by apimikov         ###   ########.fr       */
+/*   Updated: 2024/02/02 12:20:16 by apimikov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,10 +50,10 @@ int	set_size_xy(t_fdf *fdf)
 
 	fdf->fd = open(fdf->argv[1], O_RDONLY);
 	if (fdf->fd == -1)
-		exit (value_err_free("Error: can't open file\n", 1, fdf));
+		exit (perror_value_free(fdf->argv[1], 1, fdf));
 	str = get_next_line(fdf->fd);
 	if (!str)
-		exit(value_err_free("Error: Empty file\n", 1, fdf));
+		exit(value_err_free("Error. fdf: Empty file\n", 1, fdf));
 	fdf->size_x = sizeof_line(str);
 	free(str);
 	fdf->size_y = 1;
@@ -63,11 +63,11 @@ int	set_size_xy(t_fdf *fdf)
 		if (!str)
 			break ;
 		if (fdf->size_x != sizeof_line(str))
-			exit(value_err_free("Error: wrong format of the file\n", 1, fdf));
+			exit(value_err_free("Error. fdf: wrong shape of data\n", 1, fdf));
 		free(str);
 		fdf->size_y++;
 	}
 	if (close(fdf->fd) == -1)
-		exit(value_err_free("Error: close file error\n", 1, fdf));
+		exit(value_err_free("Error. fdf: close file error\n", 1, fdf));
 	return (0);
 }

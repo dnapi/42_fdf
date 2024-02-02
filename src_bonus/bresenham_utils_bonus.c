@@ -6,7 +6,7 @@
 /*   By: apimikov <apimikov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 17:55:14 by apimikov          #+#    #+#             */
-/*   Updated: 2024/02/01 16:25:22 by apimikov         ###   ########.fr       */
+/*   Updated: 2024/02/02 12:05:52 by apimikov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@ int	is_pixel(t_vec r0, t_fdf *fdf)
 	return (0);
 }
 
-//	c[0] = (z - fdf->min_z) * (rgb[1] - rgb[0])	/ dz + rgb[0];
 uint32_t	color_gradient(long z, t_vec r0, t_vec r1, t_fdf *fdf)
 {
 	int		c[3];
@@ -82,7 +81,7 @@ uint32_t	color_select(t_brsnhm *brs, t_vec r0, t_vec r1, t_fdf *fdf)
 		return (DEFAULTCOLOR);
 	if (fdf->cam.color == 1)
 	{
-		if (r0.z > r1.z)
+		if (r0.z < r1.z)
 			return (r0.c);
 		else
 			return (r1.c);

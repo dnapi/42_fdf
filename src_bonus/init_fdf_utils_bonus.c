@@ -6,7 +6,7 @@
 /*   By: apimikov <apimikov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 11:05:03 by apimikov          #+#    #+#             */
-/*   Updated: 2024/02/01 16:27:58 by apimikov         ###   ########.fr       */
+/*   Updated: 2024/02/02 11:44:46 by apimikov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,6 @@ void	set_z_minmax(t_fdf *fdf)
 
 void	set_camera(t_fdf *fdf)
 {
-	fdf->cam.iso = 1;
 	fdf->cam.angz = 3.1415 / 4;
 	fdf->cam.angx = 0.95531;
 	fdf->cam.shiftx = 0;

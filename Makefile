@@ -6,7 +6,7 @@ LIBFT = $(LIBFT_DIR)/libft.a
 SRC_DIR = src/
 SRC_DIR_B = src_bonus/
 INC_DIR = include/
-#GLFW_DIR = /Users/apimikov/.brew/opt/glfw/lib
+GLFW_DIR = /Users/apimikov/.brew/opt/glfw/lib
 
 SRC_NAMES = main.c init_fdf.c init_fdf_utils.c read_row.c \
 		hooks.c error_msg.c set_size.c \
@@ -21,8 +21,8 @@ CFLAGS	= -Wextra -Wall -Werror -Wunreachable-code -Ofast
 HEADERS	= -I./include -I$(LIBMLX)/include  -I./$(LIBFT_DIR)
 
 LIBMLX	= ./libmlx42
-#LIBS	= $(LIBMLX)/build/libmlx42.a -ldl -lglfw -L$(GLFW_DIR) -pthread -lm
-LIBS	= $(LIBMLX)/build/libmlx42.a -ldl -lglfw -pthread -lm
+LIBS	= $(LIBMLX)/build/libmlx42.a -ldl -lglfw -L$(GLFW_DIR) -pthread -lm
+#LIBS	= $(LIBMLX)/build/libmlx42.a -ldl -lglfw -pthread -lm
 MLX	= $(LIBMLX)/build/libmlx42.a
 
 SRCS = $(addprefix $(SRC_DIR), $(SRC_NAMES))

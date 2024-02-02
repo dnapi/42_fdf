@@ -6,7 +6,7 @@
 /*   By: apimikov <apimikov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 11:04:15 by apimikov          #+#    #+#             */
-/*   Updated: 2024/02/01 16:26:08 by apimikov         ###   ########.fr       */
+/*   Updated: 2024/02/02 11:44:31 by apimikov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,9 +58,9 @@ void	str_to_color(char **str, long *row, size_t size, t_fdf *fdf)
 	while (++i < size)
 	{
 		pnt = str[i];
-		while (*pnt && *pnt != ',')
+		while (*pnt && *pnt != ',' && *pnt != '\n')
 			pnt++;
-		if (*pnt == '\0')
+		if (*pnt == '\0' || *pnt == '\n')
 			row[i] = DEFAULTCOLOR;
 		else
 			row[i] = ft_atoi_hex(pnt + 1);

@@ -6,7 +6,7 @@
 /*   By: apimikov <apimikov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/31 09:00:47 by apimikov          #+#    #+#             */
-/*   Updated: 2024/01/31 09:58:30 by apimikov         ###   ########.fr       */
+/*   Updated: 2024/02/02 11:20:53 by apimikov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@ long	ft_atoi_hex(const char *str)
 	long	digit;
 
 	result = 0;
-	if (ft_strlen(str) >= 2 && str[0] == '0' && \
-		(str[1] == 'x' || str[1] == 'X'))
+	if (ft_strlen(str) > 2 && str[0] == '0' && \
+		(str[1] == 'x' || str[1] == 'X') && str[2] != '\n')
 		str += 2;
 	else
 		return (-1);
@@ -48,13 +48,13 @@ long	ft_atoi_hex(const char *str)
 
 /*
 int main() {
-	char hexString[] = "0xABCD";
-	int intValue = ft_atoi_hex(hexString);
-	if (intValue != -1) {
+	char hex_string[] = "0xABCD";
+	int int_value = ft_atoi_hex(hex_string);
+	if (int_value != -1) {
 		printf("The integer value of %s in \
-		hexadecimal is: %d\n", hexString, intValue);
+		hexadecimal is: %d\n", hex_string, int_value);
 	} else {
-		printf("%s is not a valid hexadecimal number.\n", hexString);
+		printf("%s is not a valid hexadecimal number.\n", hex_string);
 	}
 	return 0;
 }

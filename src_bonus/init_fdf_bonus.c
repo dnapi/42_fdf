@@ -6,7 +6,7 @@
 /*   By: apimikov <apimikov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 16:23:37 by apimikov          #+#    #+#             */
-/*   Updated: 2024/02/01 16:25:31 by apimikov         ###   ########.fr       */
+/*   Updated: 2024/02/02 11:45:45 by apimikov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@ int	file_name_check(char *argv[])
 	int	len;
 
 	len = ft_strlen(argv[1]);
-	ft_printf("file extension is \"%s\".\n",argv[1] + len -4);
+	if (len <= 4)
+		return (1);
 	if (ft_strncmp(argv[1] + len - 4, ".fdf", 4))
 		return (1);
 	return (0);
@@ -37,18 +38,16 @@ t_fdf	*init_fdf(int argc, char *argv[])
 	if (!fdf)
 		return (null_err("Error. fdf: malloc problem\n"));
 	fdf->argv = argv;
-	// is it good practice ?
-	//fdf->z = NULL;
-	//fdf->c = NULL;
-	if (fdf->z == NULL)
-		ft_printf("Hi fdf->z is NULL at initialization!\n");
-	else
-		ft_printf("Hi fdf->z is NOT NULL at initialization!\n");
+	fdf->z = NULL;
+	fdf->c = NULL;
 	set_size_xy(fdf);
 	fdf->fd = open(argv[1], O_RDONLY);
-	// fix potential leaks in cas of error ?
 	if (fdf->fd == -1)
-		return ((t_fdf *)(uintptr_t)value_err_free("fdf:can'topenfile\n", 0, fdf));
+	{
+		free_fdf(fdf);
+		perror(argv[1]);
+		return (NULL);
+	}
 	set_z_matrix(fdf);
 	set_z_minmax(fdf);
 	set_camera(fdf);
@@ -69,17 +68,12 @@ void	ft_free_char2d(char **split)
 		i++;
 	}
 	free(split);
-//	split = NULL;
 }
 
 void	free_int_2d(long **m, size_t sizey)
 {
 	size_t	i;
 
-	//remove next two lines
-	if (m)
-		ft_printf("Hi! you free it ! I am not NULL!!!\n");
-	// till here
 	if (!m)
 		return ;
 	i = 0;
@@ -93,7 +87,6 @@ void	free_int_2d(long **m, size_t sizey)
 		i++;
 	}
 	free(m);
-	//m = NULL;
 }
 
 void	free_fdf(t_fdf *fdf)
@@ -105,5 +98,4 @@ void	free_fdf(t_fdf *fdf)
 	free_int_2d(fdf->c, fdf->size_y);
 	fdf->c = NULL;
 	free(fdf);
-//	fdf = NULL;
 }
