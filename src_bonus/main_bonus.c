@@ -30,7 +30,7 @@ int32_t	main(int32_t argc, char *argv[])
 	fdf = init_fdf(argc, argv);
 	if (!fdf)
 		return (1);
-	fdf->mlx = mlx_init(MLXWIDTH, MLXHEIGHT, "MLX42", true);
+	fdf->mlx = mlx_init(MLXWIDTH, MLXHEIGHT, "FdF42", true);
 	if (!fdf->mlx)
 		ft_mlx_error(fdf, 0);
 	fdf->image = mlx_new_image(fdf->mlx, IMAGEWIDTH, IMAGEHEIGHT);
