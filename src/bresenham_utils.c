@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   bresenham_utils.c                                  :+:      :+:    :+:   */
+/*   bresenham_utils.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: apimikov <apimikov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 17:55:14 by apimikov          #+#    #+#             */
-/*   Updated: 2024/02/01 16:40:27 by apimikov         ###   ########.fr       */
+/*   Updated: 2024/02/05 08:59:28 by apimikov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,19 +45,18 @@ int	is_pixel(t_vec r0, t_fdf *fdf)
 	return (0);
 }
 
-uint32_t	color_gradient(long z, t_vec r0, t_vec r1, t_fdf *fdf)
+uint32_t	color_gradient(float z, t_vec r0, t_vec r1, t_fdf *fdf)
 {
 	int		c[3];
 	float	dz;
 	int		rgb[2];
 
-	dz = ft_max(1, fdf->max_z - fdf->min_z);
 	if (fdf->cam.color == 2)
 	{
-		dz = ft_max(1, fdf->max_z - fdf->min_z);
-		c[0] = (z - fdf->min_z) * (REDMAX - REDMIN) / dz + REDMIN;
-		c[1] = (z - fdf->min_z) * (GREENMAX - GREENMIN) / dz + GREENMIN;
-		c[2] = (z - fdf->min_z) * (BLUEMAX - BLUEMIN) / dz + BLUEMIN;
+		dz = (z - fdf->min_z) / ft_max(1, fdf->max_z - fdf->min_z);
+		c[0] = dz * (REDMAX - REDMIN) + REDMIN;
+		c[1] = dz * (GREENMAX - GREENMIN) + GREENMIN;
+		c[2] = dz * (BLUEMAX - BLUEMIN) + BLUEMIN;
 		return (c[0] << 24 | c[1] << 16 | c[2] << 8 | 150);
 	}
 	dz = ft_max(1, ft_abs_i(r1.z - r0.z));
@@ -75,21 +74,22 @@ uint32_t	color_gradient(long z, t_vec r0, t_vec r1, t_fdf *fdf)
 
 uint32_t	color_select(t_brsnhm *brs, t_vec r0, t_vec r1, t_fdf *fdf)
 {
-	long	z;
+	float	z;
 
 	if (fdf->cam.color == 0)
 		return (DEFAULTCOLOR);
 	if (fdf->cam.color == 1)
 	{
-		if (r0.z > r1.z)
+		if (r0.z < r1.z)
 			return (r0.c);
 		else
 			return (r1.c);
 	}
+	z = (r1.z - r0.z);
 	if (brs->d[0] >= brs->d[1] && brs->d[0] > 0)
-		z = (1 - (r1.x - r0.x) / brs->d[0]) * (r1.z - r0.z) + r0.z;
+		z = (brs->d[0] - ft_abs_i(r1.x - r0.x)) * z / brs->d[0] + r0.z;
 	else if (brs->d[1] > brs->d[0] && brs->d[1] > 0)
-		z = (1 - (r1.y - r0.y) / brs->d[1]) * (r1.z - r0.z) + r0.z;
+		z = (brs->d[1] - ft_abs_i(r1.y - r0.y)) * z / brs->d[1] + r0.z;
 	else
 		z = r0.z;
 	return (color_gradient(z, r0, r1, fdf));
